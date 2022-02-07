@@ -124,9 +124,7 @@ function selecionarCarta(cartaClicada) {
             console.log(segundaCarta);
             flag = true;
 
-            intervalo = setInterval(contadorTempo, 5000);
-
-            validarPar();
+            setTimeout(validarPar, 1000);
         }
     }
 }
