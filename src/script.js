@@ -1,12 +1,3 @@
-// Prende o usuário até digitar um número de cartas dentro das restrições do jogo
-// (entre 4 e 14 cartas, sendo um número par)
-let numCartas = parseInt(prompt("Com quantas cartas vocês quer jogar?"));
-
-while ((numCartas<4)||(numCartas>14)||((numCartas%2)!=0)){
-    numCartas = parseInt(prompt("Com quantas cartas vocês quer jogar?"));
-    print((numCartas<4)||(numCartas>14)||((numCartas%2)!=0));
-}
-
 // Criação das cartas como objeto
 const carta0 = {nome: "img/bobrossparrot.gif", id: 0}
 const carta1 = {nome: "img/explodyparrot.gif", id: 1}
@@ -27,20 +18,75 @@ cartas.push(carta5);
 cartas.push(carta6);
 
 // Vetor para guardar as cartas que estão em jogo
-const cartasEmJogo = [];
+let cartasEmJogo = [];
 
-geraCartasAleatorias();
+// variáveis globais usadas para auxilixar o controle do jogo
+let primeiraCarta = null;
+let segundaCarta = null;
 
-// Gera numCartas/2 cartas diferentes entre si aleatórias
-// usamos numCarta/2 porque numCartas é o número total de cartas, mas
-// para o jogo precisamos de pares de cartas.
+let qtdadeJogadas = 0;
+let qtdadeParesAbertos = 0;
+let clicouDuasCartas = false;
+
+let contador = 0;
+
+// Prende o usuário até digitar um número de cartas dentro das restrições do jogo
+// (entre 4 e 14 cartas, sendo um número par)
+let numCartas = parseInt(prompt("Com quantas cartas vocês quer jogar?"));
+
+// Chamada a função iniciarJogo() para iniciar o jogo
+iniciarJogo();
+
+// Função usada para iniciar um novo jogo
+function iniciarJogo(){
+    validarQtdadecartas();
+    geraCartasAleatorias();
+    montarJogo();
+}
+
+// Função usada para limpar as variáveis globais
+function limparVariaveis(){
+    cartasEmJogo = [];
+    primeiraCarta = null;
+    segundaCarta = null;
+
+    qtdadeJogadas = 0;
+    qtdadeParesAbertos = 0;
+    clicouDuasCartas = false;
+
+    contador = 0;
+
+    intervalo = null;
+    timer = 0;
+
+    let elemento = document.querySelector(".cartas");
+    elemento.innerHTML ="";
+    // // Outra maneira de limpar a div cuja class é .cartas é usando os seus filhos e chamando o parentNode
+    // let elemento = document.querySelectorAll(".carta");
+
+    // for(let i = 0; i < elemento.length; i++){
+    //     elemento[i].parentNode.removeChild(elemento[i]);
+    // }
+
+}
+
+// Função usada para validar a quantidade de cartas
+// O jogo só funcionará com número de cartas pares entre, 4 e 14 inclusos
+function validarQtdadecartas(){
+    while ((numCartas<4)||(numCartas>14)||((numCartas%2)!=0)){
+        numCartas = parseInt(prompt("Você deve digitar uma quantidade de cartas pares entre 4 e 14, inclusos!\nCom quantas cartas vocês quer jogar?"));
+        print((numCartas<4)||(numCartas>14)||((numCartas%2)!=0));
+    }
+}
+
+// Função usada para gerar um array contendo pares das cartas do jogo 
+// aleatoriamente em um array :cartasEmJogo:
 function geraCartasAleatorias(){
     // Algoritmo de embaralhamento de Fisher-Yates
     let list = [];
     for(let i=0; i<(numCartas/2); i++){
         list.push(i);
     }
-    console.log(list);
 
     let randomNumber;
     let tmp;
@@ -63,11 +109,7 @@ function geraCartasAleatorias(){
         list[i] = tmp;
         cartasEmJogo.push(cartas[list[i]]);
     } 
-    console.log("Cartas embaralhadas:")
-    console.log(cartasEmJogo);
 }
-
-montarJogo(false);
 
 // Função para criar a div que será renderizada na tela com as imagesn da carta 
 function renderizarCarta(caminhoImg){
@@ -85,98 +127,91 @@ function renderizarCarta(caminhoImg){
     
 }
 
-const clicouCarta = false;
-
-function clicar(carta){
-    carta.querySelector(".frente").classList.toggle("face-frente-virada");
-    carta.querySelector(".verso").classList.toggle("face-verso-virada");
-}
-
+// Função usada para virar a carta deixando o conteúdo da carta fora de vista
 function desvirar(cartaClicada){
     cartaClicada.querySelector(".frente").classList.toggle("face-frente-virada");
     cartaClicada.querySelector(".verso").classList.toggle("face-verso-virada");
 }
 
-let primeiraCarta = null;
-let segundaCarta = null;
+function atualizarQtdadeJogadas(){
+    let elemento = document.querySelector(".qtdade-jogadas");
+    elemento.innerHTML = qtdadeJogadas;
+}
 
-let qtdadeJogadas = 0;
-let qtdadeParesAbertos = 0;
-let flag = false;
-
-let contador = 0;
-let intervalo = null;
-
+// Função usada para tratar o clique nas cartas
 function selecionarCarta(cartaClicada) {
-    if(flag == false){
+    if(clicouDuasCartas == false){
         if(primeiraCarta === null) {
             primeiraCarta = cartaClicada;
+            qtdadeJogadas+=1;
+            atualizarQtdadeJogadas();
             cartaClicada.querySelector(".frente").classList.toggle("face-frente-virada");
             cartaClicada.querySelector(".verso").classList.toggle("face-verso-virada");
-            console.log("Primeira");
-            console.log(primeiraCarta);
         } else {
             cartaClicada.querySelector(".frente").classList.toggle("face-frente-virada");
             cartaClicada.querySelector(".verso").classList.toggle("face-verso-virada");
             segundaCarta = cartaClicada;
-            qtdadeJogadas+=2;
-            console.log("Segunda");
-            console.log(segundaCarta);
-            flag = true;
+            qtdadeJogadas+=1;
+            atualizarQtdadeJogadas();
+            clicouDuasCartas = true;
 
             setTimeout(validarPar, 1000);
         }
     }
 }
 
-function contadorTempo(){
-    if (contador == 5000){
-        clearInterval(intervalo);
-    }else{
-        contador++;
-    }
-
-}
-
+// Função usada para validar se o par de cartas selecionadas são iguais ou não
+// bem como para encerra o jogo
 function validarPar(){
     if (primeiraCarta.isEqualNode(segundaCarta)){
-        console.log("São iguais");
         primeiraCarta = null;
         segundaCarta = null;
         qtdadeParesAbertos += 1;
         if(qtdadeParesAbertos == (numCartas/2)){
             alert("Você ganhou em " + qtdadeJogadas + " jogadas!");
+            let novoJogo = prompt("Quer começar um novo jogo (sim/não)?");
+            if (novoJogo == "sim"){
+                limparVariaveis();
+                numCartas = parseInt(prompt("Com quantas cartas vocês quer jogar?"));
+                iniciarJogo();
+            }else{
+                limparVariaveis();
+                qtdadeJogadas = 0;
+                atualizarQtdadeJogadas();
+                let elemento = document.querySelector(".fim-jogo");
+                elemento.innerHTML = "FIM DE JOGO!";
+            }
         }
 
     }else{
-        console.log("São !=");
         desvirar(primeiraCarta);    
         desvirar(segundaCarta);
         primeiraCarta = null;
         segundaCarta = null;
     }
-    flag = false;
+    clicouDuasCartas = false;
 }
 
 // Função para montar as cartas do jogo na tela
-function montarJogo(mobile){
-    if (mobile == false){
-        // Monta versão para grandes telas
-        var elemento = document.querySelector(".cartas");
-        for (let i=0; i<numCartas; i++){
-            const carta = cartasEmJogo[i];
-            const aux = renderizarCarta(carta.nome);
-            console.log(i);
-            elemento.innerHTML += aux;
-        }
-    }else{
-        // Monta versão para dispositivos móveis
-        var elemento = document.querySelector(".mobile");
-        for (let i=0; i<numCartas; i++){
-            const carta = cartasEmJogo[i];
-            const aux = renderizarCarta(carta.nome);
-            elemento.innerHTML += aux;
-            console.log(i);
-        }
+function montarJogo(){
+    let elemento = document.querySelector(".cartas");
+    for (let i=0; i<numCartas; i++){
+        const carta = cartasEmJogo[i];
+        const aux = renderizarCarta(carta.nome);
+        elemento.innerHTML += aux;
     }
 }
+
+
+// Variáveis e função para fazer contegem do tempo de jogo
+const relogio = document.querySelector(".relogio");
+let intervalo = null;
+let timer = 0;
+
+function aumentarContagem(){    
+    relogio.innerHTML = " " + timer + " segundos";
+    timer+=1;
+}
+
+intervalo = setInterval(aumentarContagem, 1000);
+console.log(intervalo);
