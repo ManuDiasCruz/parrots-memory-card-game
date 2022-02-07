@@ -19,24 +19,16 @@ main{
 }
 
 .cartas{
-    align-items: center;
-}
-
-.cima{
     display: flex;
+    flex-wrap: wrap;
     align-items: center;
-    justify-content: space-evenly;
-}
-
-.baixo{
-    display: flex;
-    align-items: center;
-    justify-content: space-evenly;
+    justify-content: center;
 }
 
 .carta{
     width: 117px;
     height: 146px;
+    margin-left: 34px;
     margin-bottom: 34px;
     
     background: #A7E9AF;
@@ -66,11 +58,11 @@ main{
     transform: rotateY(180deg);    
 }
 
-.face .verso {
+.face-verso-virada {
     transform: rotateY(0deg);
 }
 
-.face .frente {
+.face-frente-virada {
     transform: rotateY(-180deg);
 }
 

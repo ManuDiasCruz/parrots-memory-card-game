@@ -36,7 +36,12 @@ geraCartasAleatorias();
 // para o jogo precisamos de pares de cartas.
 function geraCartasAleatorias(){
     // Algoritmo de embaralhamento de Fisher-Yates
-    let list = [0,1,2,3,4,5,6];
+    let list = [];
+    for(let i=0; i<(numCartas/2); i++){
+        list.push(i);
+    }
+    console.log(list);
+
     let randomNumber;
     let tmp;
     for (let i = list.length; i;) {
@@ -46,12 +51,19 @@ function geraCartasAleatorias(){
         list[randomNumber] = list[i];
         // troca o atual pelo aleatório
         list[i] = tmp;
-    } 
-    
-    // Pega a quantidade de pares de cartas necessários para o jogo diferentes entre si
-    for(let i=0; i<(numCartas/2); i++){
         cartasEmJogo.push(cartas[list[i]]);
-    }
+    } 
+
+    for (let i = list.length; i;) {
+        randomNumber = Math.random() * i-- | 0;
+        tmp = list[randomNumber];
+        // troca o número aleatório pelo atual
+        list[randomNumber] = list[i];
+        // troca o atual pelo aleatório
+        list[i] = tmp;
+        cartasEmJogo.push(cartas[list[i]]);
+    } 
+    console.log("Cartas embaralhadas:")
     console.log(cartasEmJogo);
 }
 
@@ -73,33 +85,35 @@ function renderizarCarta(caminhoImg){
     
 }
 
-const primeiraCarta = true;
+const clicouCarta = false;
 
 function clicar(carta){
-    // for (let i=0; i<pratos.length; i++){
-    //     pratos[i].classList.remove("artigoSelecionado");
-    // }
-    carta.querySelector(".verso").classList.toggle("verso");
+    carta.querySelector(".frente").classList.toggle("face-frente-virada");
+    carta.querySelector(".verso").classList.toggle("face-verso-virada");
+}
+
+function desvirar(carta){
+    carta.querySelector(".frente").classList.toggle("verso");
 }
 
 // Função para montar as cartas do jogo na tela
 function montarJogo(mobile){
     if (mobile == false){
         // Monta versão para grandes telas
-        var elemento = document.querySelector(".cima");
-        for (let i=0; i<(numCartas/2); i++){
+        var elemento = document.querySelector(".cartas");
+        for (let i=0; i<numCartas; i++){
             const carta = cartasEmJogo[i];
             const aux = renderizarCarta(carta.nome);
-            console.log(aux);
+            console.log(i);
             elemento.innerHTML += aux;
         }
 
-        elemento = document.querySelector(".baixo");
-        for (let i=(numCartas/2); i<numCartas; i++){
-            const carta = cartasEmJogo[i%(numCartas/2)];
-            const aux = renderizarCarta(carta.nome);
-            elemento.innerHTML += aux;
-        }
+        // elemento = document.querySelector(".baixo");
+        // for (let i=(numCartas/2); i<numCartas; i++){
+        //     const carta = cartasEmJogo[i%(numCartas/2)];
+        //     const aux = renderizarCarta(carta.nome);
+        //     elemento.innerHTML += aux;
+        // }
     }else{
         // Monta versão para dispositivos móveis
         var elemento = document.querySelector(".mobile");
