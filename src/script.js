@@ -104,6 +104,9 @@ let qtdadeJogadas = 0;
 let qtdadeParesAbertos = 0;
 let flag = false;
 
+let contador = 0;
+let intervalo = null;
+
 function selecionarCarta(cartaClicada) {
     if(flag == false){
         if(primeiraCarta === null) {
@@ -121,9 +124,20 @@ function selecionarCarta(cartaClicada) {
             console.log(segundaCarta);
             flag = true;
 
+            intervalo = setInterval(contadorTempo, 5000);
+
             validarPar();
         }
     }
+}
+
+function contadorTempo(){
+    if (contador == 5000){
+        clearInterval(intervalo);
+    }else{
+        contador++;
+    }
+
 }
 
 function validarPar(){
@@ -135,7 +149,7 @@ function validarPar(){
         if(qtdadeParesAbertos == (numCartas/2)){
             alert("Você ganhou em " + qtdadeJogadas + " jogadas!");
         }
-        
+
     }else{
         console.log("São !=");
         desvirar(primeiraCarta);    
