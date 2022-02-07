@@ -135,6 +135,7 @@ function validarPar(){
         if(qtdadeParesAbertos == (numCartas/2)){
             alert("Você ganhou em " + qtdadeJogadas + " jogadas!");
         }
+        
     }else{
         console.log("São !=");
         desvirar(primeiraCarta);    
