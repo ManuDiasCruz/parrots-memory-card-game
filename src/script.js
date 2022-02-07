@@ -72,7 +72,7 @@ montarJogo(false);
 // Função para criar a div que será renderizada na tela com as imagesn da carta 
 function renderizarCarta(caminhoImg){
     const div = `
-    <div class="carta" data-identifier="card" onclick="clicar(this)">
+    <div class="carta" data-identifier="card" onclick="selecionarCarta(this)">
         <div class="frente face" data-identifier="back-face">
             <img src="img/front.png" alt="">
         </div>
@@ -92,8 +92,57 @@ function clicar(carta){
     carta.querySelector(".verso").classList.toggle("face-verso-virada");
 }
 
-function desvirar(carta){
-    carta.querySelector(".frente").classList.toggle("verso");
+function desvirar(cartaClicada){
+    cartaClicada.querySelector(".frente").classList.toggle("face-frente-virada");
+    cartaClicada.querySelector(".verso").classList.toggle("face-verso-virada");
+}
+
+let primeiraCarta = null;
+let segundaCarta = null;
+
+let qtdadeJogadas = 0;
+let qtdadeParesAbertos = 0;
+let flag = false;
+
+function selecionarCarta(cartaClicada) {
+    if(flag == false){
+        if(primeiraCarta === null) {
+            primeiraCarta = cartaClicada;
+            cartaClicada.querySelector(".frente").classList.toggle("face-frente-virada");
+            cartaClicada.querySelector(".verso").classList.toggle("face-verso-virada");
+            console.log("Primeira");
+            console.log(primeiraCarta);
+        } else {
+            cartaClicada.querySelector(".frente").classList.toggle("face-frente-virada");
+            cartaClicada.querySelector(".verso").classList.toggle("face-verso-virada");
+            segundaCarta = cartaClicada;
+            qtdadeJogadas+=2;
+            console.log("Segunda");
+            console.log(segundaCarta);
+            flag = true;
+
+            validarPar();
+        }
+    }
+}
+
+function validarPar(){
+    if (primeiraCarta.isEqualNode(segundaCarta)){
+        console.log("São iguais");
+        primeiraCarta = null;
+        segundaCarta = null;
+        qtdadeParesAbertos += 1;
+        if(qtdadeParesAbertos == (numCartas/2)){
+            alert("Você ganhou em " + qtdadeJogadas + " jogadas!");
+        }
+    }else{
+        console.log("São !=");
+        desvirar(primeiraCarta);    
+        desvirar(segundaCarta);
+        primeiraCarta = null;
+        segundaCarta = null;
+    }
+    flag = false;
 }
 
 // Função para montar as cartas do jogo na tela
@@ -107,13 +156,6 @@ function montarJogo(mobile){
             console.log(i);
             elemento.innerHTML += aux;
         }
-
-        // elemento = document.querySelector(".baixo");
-        // for (let i=(numCartas/2); i<numCartas; i++){
-        //     const carta = cartasEmJogo[i%(numCartas/2)];
-        //     const aux = renderizarCarta(carta.nome);
-        //     elemento.innerHTML += aux;
-        // }
     }else{
         // Monta versão para dispositivos móveis
         var elemento = document.querySelector(".mobile");
