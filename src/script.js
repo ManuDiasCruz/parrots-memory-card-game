@@ -12,9 +12,12 @@ function renderizarCartas(mobile){
         var elemento = document.querySelector(".cima");
         for (let i=0; i<(numCartas/2); i++){
             const aux = `
-            <div class="carta">
-                <div class="frente" data-identifier="back-face">
+            <div class="carta" data-identifier="card">
+                <div class="frente face" data-identifier="back-face">
                     <img src="img/front.png" alt="">
+                </div>
+                <div class="verso face" data-identifier="back-face">
+                    <img src="img/metalparrot.gif" alt="">
                 </div>
             </div>
             `;
@@ -25,9 +28,12 @@ function renderizarCartas(mobile){
         elemento = document.querySelector(".baixo");
         for (let i=(numCartas/2); i<numCartas; i++){
             const aux = `
-            <div class="carta">
-                <div class="frente" data-identifier="back-face">
+            <div class="carta" data-identifier="card">
+                <div class="frente face" data-identifier="back-face">
                     <img src="img/front.png" alt="">
+                </div>
+                <div class="verso face" data-identifier="back-face">
+                    <img src="img/metalparrot.gif" alt="">
                 </div>
             </div>
             `;
@@ -38,9 +44,12 @@ function renderizarCartas(mobile){
         var elemento = document.querySelector(".mobile");
         for (let i=0; i<numCartas; i++){
             const aux = `
-            <div class="carta">
-                <div class="frente" data-identifier="back-face">
+            <div class="carta" data-identifier="card">
+                <div class="frente face" data-identifier="back-face">
                     <img src="img/front.png" alt="">
+                </div>
+                <div class="verso face" data-identifier="back-face">
+                    <img src="img/metalparrot.gif" alt="">
                 </div>
             </div>
             `;
