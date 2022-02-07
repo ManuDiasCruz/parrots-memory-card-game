@@ -66,11 +66,11 @@ main{
     transform: rotateY(180deg);    
 }
 
-.carta:hover .verso {
+.face .verso {
     transform: rotateY(0deg);
 }
 
-.carta:hover .frente {
+.face .frente {
     transform: rotateY(-180deg);
 }
 
